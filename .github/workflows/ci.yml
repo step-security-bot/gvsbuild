@@ -4,6 +4,7 @@ on:
   pull_request:
   release:
     types: [published]
+  workflow_dispatch:
 
 env:
   python_version: '3.11'
@@ -33,7 +34,7 @@ jobs:
     name: Test with Python ${{ matrix.python-version }}
     strategy:
       matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11']
+        python-version: ['3.10', '3.11']
     runs-on: windows-latest
     timeout-minutes: 60
     if: "!contains(github.event.head_commit.message, 'skip ci')"
@@ -81,7 +82,7 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     strategy:
       matrix:
-        gtk-version: ['3', '4']
+        gtk-version: ['4']
 
     steps:
       - name: Checkout
@@ -117,26 +118,22 @@ jobs:
       - name: Build GTK4
         if: matrix.gtk-version == '4'
         run: > # Use -j2 option to prevent out of memory errors with GitHub Action runners
-          poetry run gvsbuild build --ninja-opts -j2 --enable-gi cairo gtk4 libadwaita
-          gtksourceview5 gobject-introspection adwaita-icon-theme hicolor-icon-theme
+          poetry run gvsbuild build --platform=x64 --ninja-opts -j2 --enable-gi glib librsvg libpng gdk-pixbuf gtk4 pygobject
       - name: Restore git binary
         run: |
           Move-Item "C:\Program Files\Git\usr\notbin" "C:\Program Files\Git\usr\bin"
           Move-Item "C:\Program Files\Git\notbin" "C:\Program Files\Git\bin"
-      - name: Create Source Dist and Wheel
-        run: poetry build
-      - name: Upload gvsbuild-${{ github.event.release.tag_name }}.tar.gz
-        uses: actions/upload-artifact@v3
-        if: github.event_name == 'release' && matrix.gtk-version == '4'
+
+      - name: Zip Bundle
+        run: >
+          7z a
+          ${{ github.workspace }}/Release.zip
+          "C:\gtk-build\gtk\x64\release"
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
         with:
-          name: gvsbuild-${{ github.event.release.tag_name }}.tar.gz
-          path: dist/gvsbuild-${{ github.event.release.tag_name }}.tar.gz
-      - name: Upload gvsbuild-${{ github.event.release.tag_name }}-py3-none-any.whl
-        uses: actions/upload-artifact@v3
-        if: github.event_name == 'release' && matrix.gtk-version == '4'
-        with:
-          name: gvsbuild-${{ github.event.release.tag_name }}-py3-none-any.whl
-          path: dist/gvsbuild-${{ github.event.release.tag_name }}-py3-none-any.whl
-      - name: Publish to PyPI (release only)
-        if: github.event_name == 'release' && matrix.gtk-version == '4'
-        run: poetry publish -u __token__ -p ${{ secrets.PYPI_TOKEN }}
+          name: latest
+          tag_name: latest
+          body: gvsbuild-release
+          files: "*.zip"
