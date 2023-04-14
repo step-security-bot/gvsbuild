@@ -19,11 +19,10 @@
 """Default groups of projects."""
 
 from .utils.base_group import Group, group_add
-from .utils.base_project import Project, ProjectType
 
 
 @group_add
-class Group_Tools(Group):
+class GroupTools(Group):
     def __init__(self):
         Group.__init__(
             self,
@@ -36,7 +35,6 @@ class Group_Tools(Group):
                 "msys2",
                 "nasm",
                 "ninja",
-                "nuget",
                 "perl",
                 "yasm",
             ],
@@ -44,7 +42,7 @@ class Group_Tools(Group):
 
 
 @group_add
-class Group_Gtk3_Full(Group):
+class GroupGtk3Full(Group):
     def __init__(self):
         Group.__init__(
             self,
@@ -62,7 +60,7 @@ class Group_Gtk3_Full(Group):
 
 
 @group_add
-class Group_Tools_Check(Group):
+class GroupToolsCheck(Group):
     """Group to use all the tools handled by the script, to see at a glance if
     everything seems ok after (big) changes on the tools."""
 
@@ -79,7 +77,6 @@ class Group_Tools_Check(Group):
 
 
 @group_add
-class Group_All(Group):
+class GroupAll(Group):
     def __init__(self):
-        all_prj = [x.name for x in Project._projects if x.type == ProjectType.PROJECT]
-        Group.__init__(self, "all", dependencies=all_prj)
+        Group.__init__(self, "all")

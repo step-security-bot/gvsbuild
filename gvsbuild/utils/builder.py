@@ -371,14 +371,10 @@ class Builder:
 
             self.__dump_vs_loc()
             log.error_exit(
-                "\n  '%s' could not be found.\n  Please check you have Visual Studio installed at '%s'\n  and that it supports the target platform '%s'."
-                % (vcvars_bat, vs_path, opts.platform)
+                f"\n  {vcvars_bat} could not be found.\n  Please check you have Visual Studio installed at {vs_path}\n  and that it supports the target platform {opts.platform}."
             )
         return subprocess.check_output(
-            f'cmd.exe /c ""{vcvars_bat}"{add_opts}>NUL && set"',
-            encoding="utf-8",
-            shell=True,
-            text=True,
+            f'cmd.exe /c ""{vcvars_bat}"{add_opts}>NUL && set"', text=True
         )
 
     def __find_vs_path_with_vs_version(self, paths):
@@ -400,6 +396,11 @@ class Builder:
         if not opts.vs_install_path:
             opts.vs_install_path = self.__find_vs_path_with_vs_version(
                 self.__dump_vs_loc()
+            )
+        if opts.vs_install_path is None:
+            log.error_exit(
+                "Unable to find Visual Studio, try using --vs-ver or --vs-install-path "
+                "to specify Visual Studio version or install location"
             )
         log.message(f"Using Visual Studio at {opts.vs_install_path}")
         output = self.__check_good_vs_install(opts, opts.vs_install_path, True)

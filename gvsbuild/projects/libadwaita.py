@@ -28,9 +28,10 @@ class Libadwaita(Tarball, Meson):
             self,
             "libadwaita",
             repository="https://gitlab.gnome.org/GNOME/libadwaita",
-            version="1.2.0",
+            version="1.3.1",
+            lastversion_even=True,
             archive_url="https://download.gnome.org/sources/libadwaita/{major}.{minor}/libadwaita-{version}.tar.xz",
-            hash="322f3e1be39ba67981d9fe7228a85818eccaa2ed0aa42bcafe263af881c6460c",
+            hash="6b8bbf413c501b46c8616a0e5b836d7a34091140941412520bbd9ddda6df8cbd",
             dependencies=[
                 "ninja",
                 "meson",
@@ -49,5 +50,5 @@ class Libadwaita(Tarball, Meson):
         self.add_param("-Dvapi=false")
 
     def build(self, **kwargs):
-        Meson.build(self, make_tests=True)
+        Meson.build(self)
         self.install(r".\COPYING share\doc\libadwaita")

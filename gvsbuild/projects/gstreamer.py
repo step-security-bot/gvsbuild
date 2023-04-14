@@ -42,9 +42,10 @@ class GStreamer(Tarball, Meson):
             self,
             "gstreamer",
             repository="https://gitlab.freedesktop.org/gstreamer/gstreamer",
-            version="1.20.5",
+            version="1.22.2",
+            lastversion_even=True,
             archive_url="https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-{version}.tar.xz",
-            hash="5a19083faaf361d21fc391124f78ba6d609be55845a82fa8f658230e5fa03dff",
+            hash="b2afe73603921c608ba48969dbb7d743776744bfe5d8059ece241137b7f88e21",
             dependencies=["meson", "ninja", "glib", "orc"],
         )
 
@@ -72,13 +73,11 @@ class Orc(Tarball, Meson):
             self,
             "orc",
             version="0.4.33",
+            lastversion_even=True,
             repository="https://gitlab.freedesktop.org/gstreamer/orc",
             archive_url="https://gstreamer.freedesktop.org/src/orc/orc-{version}.tar.xz",
             hash="844e6d7db8086f793f57618d3d4b68d29d99b16034e71430df3c21cfd3c3542a",
-            dependencies=[
-                "ninja",
-                "meson",
-            ],
+            dependencies=["meson", "ninja"],
         )
 
     def build(self):
@@ -93,10 +92,17 @@ class GstPluginsBase(Tarball, Meson):
             self,
             "gst-plugins-base",
             repository="https://gitlab.freedesktop.org/gstreamer/gstreamer",
-            version="1.20.5",
+            version="1.22.2",
+            lastversion_even=True,
             archive_url="https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-{version}.tar.xz",
-            hash="11f911ef65f3095d7cf698a1ad1fc5242ac3ad6c9270465fb5c9e7f4f9c19b35",
-            dependencies=["meson", "ninja", "gstreamer", "opus"],
+            hash="eb65120c4ee79b7a153c3c1972d5c0158c2151877cc51ec7725bba5749679d49",
+            dependencies=[
+                "meson",
+                "ninja",
+                "gstreamer",
+                "opus",
+                "ogg",
+            ],
         )
         # Examples depend on GTK3
         self.add_param("-Dexamples=disabled")
@@ -110,7 +116,9 @@ class GstPluginsBase(Tarball, Meson):
         self.add_param(f"-Dintrospection={enable_gi}")
 
     def build(self):
-        Meson.build(self)
+        Meson.build(
+            self, meson_params=f"-Dc_link_args={self.builder.gtk_dir}\\lib\\ogg.lib"
+        )
         self.install(r".\COPYING share\doc\gst-plugins-base")
 
 
@@ -121,9 +129,10 @@ class GstPluginsGood(Tarball, Meson):
             self,
             "gst-plugins-good",
             repository="https://gitlab.freedesktop.org/gstreamer/gstreamer",
-            version="1.20.5",
+            version="1.22.2",
+            lastversion_even=True,
             archive_url="https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-{version}.tar.xz",
-            hash="e83ab4d12ca24959489bbb0ec4fac9b90e32f741d49cda357cb554b2cb8b97f9",
+            hash="7c8cc59425f2b232f60ca7d13e56edd615da4f711e73dd01a7cffa46e6bc0cdd",
             dependencies=[
                 "meson",
                 "ninja",
@@ -144,13 +153,12 @@ class GstPluginsBad(Tarball, Meson):
             self,
             "gst-plugins-bad",
             repository="https://gitlab.freedesktop.org/gstreamer/gstreamer",
-            version="1.20.5",
+            version="1.22.2",
+            lastversion_even=True,
             archive_url="https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-{version}.tar.xz",
-            hash="f431214b0754d7037adcde93c3195106196588973e5b32dcb24938805f866363",
+            hash="3d8faf1ce3402c8535ce3a8c4e1a6c960e4b5655dbda6b55943db9ac79022d0f",
             dependencies=["meson", "ninja", "gst-plugins-base"],
-            patches=[
-                "wasapisink-reduce-buffer-latency.patch",
-            ],
+            patches=["wasapisink-reduce-buffer-latency.patch"],
         )
         self.add_param("-Dcurl=disabled")
         self.add_param("-Dcurl-ssh2=disabled")
@@ -161,15 +169,54 @@ class GstPluginsBad(Tarball, Meson):
 
 
 @project_add
+class GstPluginsUgly(Tarball, Meson):
+    def __init__(self):
+        Project.__init__(
+            self,
+            "gst-plugins-ugly",
+            repository="https://gitlab.freedesktop.org/gstreamer/gstreamer",
+            version="1.22.2",
+            lastversion_even=True,
+            archive_url="https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-{version}.tar.xz",
+            hash="8f30f44db0bd063709bf6fbe55138e3a98af0abcb61c360f35582bbe10e80691",
+            dependencies=["meson", "ninja", "gst-plugins-base"],
+        )
+
+    def build(self):
+        Meson.build(self)
+        self.install(r".\COPYING share\doc\gst-plugins-ugly")
+
+
+@project_add
+class GstDevTools(Tarball, Meson):
+    def __init__(self):
+        Project.__init__(
+            self,
+            "gst-devtools",
+            repository="https://gitlab.freedesktop.org/gstreamer/gstreamer",
+            version="1.22.2",
+            lastversion_even=True,
+            archive_url="https://gstreamer.freedesktop.org/src/gst-devtools/gst-devtools-{version}.tar.xz",
+            hash="eb62726d3e27a8782369a24fd6364a8885ed2462b3bbdab091dffc8139ee06d8",
+            dependencies=["meson", "ninja", "json-glib"],
+        )
+
+    def build(self):
+        Meson.build(self)
+        self.install(r".\COPYING share\doc\gst-devtools")
+
+
+@project_add
 class GstPython(Tarball, Meson):
     def __init__(self):
         Project.__init__(
             self,
             "gst-python",
             repository="https://gitlab.freedesktop.org/gstreamer/gstreamer",
-            version="1.20.5",
+            version="1.22.2",
+            lastversion_even=True,
             archive_url="https://gstreamer.freedesktop.org/src/gst-python/gst-python-{version}.tar.xz",
-            hash="27487652318659cfd7dc42784b713c78d29cc7a7df4fb397134c8c125f65e3b2",
+            hash="bef2b3d82ce4be46b775b1bb56305c1003ee01b535a53a82f9fe8924972153ad",
             dependencies=["meson", "ninja", "pygobject", "gst-plugins-base"],
         )
 

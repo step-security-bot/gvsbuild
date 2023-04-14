@@ -26,10 +26,10 @@ class DcvColorPrimitives(Tarball, Meson):
         Meson.__init__(
             self,
             "dcv-color-primitives",
-            version="0.5.1",
+            version="0.5.3",
             archive_url="https://github.com/aws/dcv-color-primitives/archive/v{version}.tar.gz",
             archive_file_name="dcv-color-primitives-{version}.tar.gz",
-            hash="6d3067308e5b419c869e256e413b8f9d1fbda56578336e2190911611e9e7f246",
+            hash="cacddfa40ea0321e1b67f73b0fbb66dc319bab548b025844be3f789650d60129",
             dependencies=["ninja", "meson", "pkgconf", "cargo"],
         )
 

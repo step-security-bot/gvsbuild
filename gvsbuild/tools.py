@@ -79,9 +79,9 @@ class ToolCmake(Tool):
         Tool.__init__(
             self,
             "cmake",
-            version="3.25.1",
+            version="3.26.3",
             archive_url="https://github.com/Kitware/CMake/releases/download/v{version}/cmake-{version}-windows-x86_64.zip",
-            hash="d93958d87cc9b91983489f0b37a268b03a3c891894d11f5437fa2a5ce94aab24",
+            hash="91a418595cc9a97d5f679e36728dfec79ee52980f51e8814ec7b05b890708523",
             dir_part="cmake-{version}-windows-x86_64",
         )
 
@@ -106,10 +106,10 @@ class ToolMeson(Tool):
         Tool.__init__(
             self,
             "meson",
-            version="1.0.0",
+            version="1.1.0",
             archive_url="https://github.com/mesonbuild/meson/archive/refs/tags/{version}.tar.gz",
             archive_file_name="meson-{version}.tar.gz",
-            hash="a2ada84d43c7e57400daee80a880a1f5003d062b2cb6c9be1747b0db38f2eb8d",
+            hash="f29a3e14062043d75e82d16f1e41856e6b1ed7a7c016e10c7b13afa7ee6364cc",
             dependencies=[],
             dir_part="meson-{version}",
             exe_name="meson.py",
@@ -189,31 +189,6 @@ class ToolNinja(Tool):
 
 
 @tool_add
-class ToolNuget(Tool):
-    def __init__(self):
-        Tool.__init__(
-            self,
-            "nuget",
-            version="6.4.0",
-            archive_url="https://dist.nuget.org/win-x86-commandline/v{version}/nuget.exe",
-            archive_file_name="nuget-{version}.exe",
-            hash="26730829b240581a3e6a4e276b9ace088930032df0c680d5591beccf6452374e",
-            dir_part="nuget-{version}",
-            exe_name="nuget.exe",
-        )
-
-    def unpack(self):
-        # Download the exe file and copy it on the tool directory
-        self.mark_deps = extract_exec(
-            self.archive_file,
-            self.build_dir,
-            check_file=self.full_exe,
-            force_dest=self.full_exe,
-            check_mark=True,
-        )
-
-
-@tool_add
 class ToolPerl(Tool):
     def __init__(self):
         Tool.__init__(
@@ -272,9 +247,9 @@ class ToolGo(Tool):
         Tool.__init__(
             self,
             "go",
-            version="1.19.4",
+            version="1.20.3",
             archive_url="https://go.dev/dl/go{version}.windows-amd64.zip",
-            hash="ada490e188bfb57c7388da7c5eba7565390992b6496204d30e710d37755956b0",
+            hash="143a2837821c7dbacf7744cbb1a8421c1f48307c6fdfaeffc5f8c2f69e1b7932",
             dir_part="go-{version}",
         )
 

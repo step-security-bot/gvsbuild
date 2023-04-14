@@ -129,10 +129,30 @@ gvsbuild build gtk4
 
 Grab a coffee, the build will take a few minutes to complete.
 
-#### Add GTK to Your Path
+#### Add GTK to Your Environmental Variables
 
 ```PowerShell
 $env:Path = "C:\gtk-build\gtk\x64\release\bin;" + $env:Path
+$env:LIB = "C:\gtk-build\gtk\x64\release\lib;" + $env:LIB
+$env:INCLUDE = "C:\gtk-build\gtk\x64\release\include;C:\gtk-build\gtk\x64\release\include\cairo;C:\gtk-build\gtk\x64\release\include\glib-2.0;C:\gtk-build\gtk\x64\release\include\gobject-introspection-1.0;C:\gtk-build\gtk\x64\release\lib\glib-2.0\include;" + $env:INCLUDE
+```
+
+#### Use PyGObject
+
+Add the `--enable-gi` and `--py-wheel` options like:
+
+```PowerShell
+gvsbuild build --enable-gi --py-wheel gtk4 pygobject
+```
+
+Once that finishes, then you need to use the gvsbuild generated wheels with your
+[Python virtualenv](https://docs.python.org/3/tutorial/venv.html) in order to
+work around this [PyGObject
+bug](https://gitlab.gnome.org/GNOME/pygobject/-/issues/545):
+
+```PowerShell
+pip install --force-reinstall (Resolve-Path C:\gtk-build\build\x64\release\pygobject\dist\PyGObject*.whl)
+pip install --force-reinstall (Resolve-Path C:\gtk-build\build\x64\release\pycairo\dist\pycairo*.whl)
 ```
 
 #### Other Options
@@ -172,7 +192,9 @@ $env:Path = "C:\gtk-build\gtk\x64\release\bin;" + $env:Path
 
 ## Troubleshooting
 
-If the download of a tarball fails a partial file will not pass the hash check,
+- If a build fails, try rebuilding it with `--clean`, if that fails, try
+rebuilding it with `--from-scratch`
+- If the download of a tarball fails a partial file will not pass the hash check,
 delete the file and try again.
 
 ## OpenSSL

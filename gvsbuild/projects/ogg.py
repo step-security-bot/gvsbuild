@@ -14,35 +14,24 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with this program; if not, see <http://www.gnu.org/licenses/>.
-
-from gvsbuild.utils.base_builders import Meson
+from gvsbuild.utils.base_builders import CmakeProject
 from gvsbuild.utils.base_expanders import Tarball
 from gvsbuild.utils.base_project import Project, project_add
 
 
 @project_add
-class JsonGLib(Tarball, Meson):
+class Ogg(Tarball, CmakeProject):
     def __init__(self):
         Project.__init__(
             self,
-            "json-glib",
-            version="1.6.6",
-            lastversion_even=True,
-            repository="https://gitlab.gnome.org/GNOME/json-glib",
-            archive_url="https://download.gnome.org/sources/json-glib/{major}.{minor}/json-glib-{version}.tar.xz",
-            hash="96ec98be7a91f6dde33636720e3da2ff6ecbb90e76ccaa49497f31a6855a490e",
-            dependencies=["meson", "ninja", "pkgconf", "glib"],
+            "ogg",
+            version="1.3.5",
+            repository="https://github.com/xiph/ogg",
+            archive_url="https://github.com/xiph/ogg/releases/download/v{version}/libogg-{version}.tar.xz",
+            hash="c4d91be36fc8e54deae7575241e03f4211eb102afb3fc0775fbbc1b740016705",
+            dependencies=["cmake", "ninja"],
         )
-        if self.opts.enable_gi:
-            self.add_dependency("gobject-introspection")
-            enable_gi = "enabled"
-        else:
-            enable_gi = "disabled"
-
-        self.add_param("-Dgtk_doc=disabled")
-        self.add_param(f"-Dintrospection={enable_gi}")
 
     def build(self):
-        Meson.build(self, make_tests=True)
-
-        self.install(r".\COPYING share\doc\json-glib")
+        CmakeProject.build(self, use_ninja=True)
+        self.install(r".\COPYING share\doc\ogg")

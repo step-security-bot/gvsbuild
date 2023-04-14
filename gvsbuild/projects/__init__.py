@@ -26,9 +26,11 @@ from gvsbuild.projects.gperf import Gperf
 from gvsbuild.projects.graphene import Graphene
 from gvsbuild.projects.gsettings_desktop_schemas import GSettingsDesktopSchemas
 from gvsbuild.projects.gstreamer import (
+    GstDevTools,
     GstPluginsBad,
     GstPluginsBase,
     GstPluginsGood,
+    GstPluginsUgly,
     GstPython,
     GStreamer,
     Orc,
@@ -59,6 +61,7 @@ from gvsbuild.projects.libsoup import Libsoup2, Libsoup3
 from gvsbuild.projects.libssh import Libssh, Libssh2
 from gvsbuild.projects.libtiff import Libtiff4
 from gvsbuild.projects.libuv import Libuv
+from gvsbuild.projects.libvorbis import Libvorbis
 from gvsbuild.projects.libvpx import Libvpx
 from gvsbuild.projects.libxml2 import Libxml2
 from gvsbuild.projects.libyuv import Libyuv
@@ -68,6 +71,7 @@ from gvsbuild.projects.luajit import Luajit
 from gvsbuild.projects.lz4 import Lz4
 from gvsbuild.projects.mit_kerberos import Kerberos
 from gvsbuild.projects.nghttp2 import Nghttp2
+from gvsbuild.projects.ogg import Ogg
 from gvsbuild.projects.openh264 import OpenH264
 from gvsbuild.projects.openssl import OpenSSL
 from gvsbuild.projects.opus import Opus
