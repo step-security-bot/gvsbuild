@@ -1,0 +1,11 @@
+--- a/gdk/win32/gdkevents-win32.c.orig	2023-04-28 09:35:25.274929700 -0300
++++ b/gdk/win32/gdkevents-win32.c	2023-04-28 09:35:55.114783600 -0300
+@@ -534,7 +534,7 @@
+   g_source_set_can_recurse (source, TRUE);
+   g_source_attach (source, NULL);
+ 
+-  set_up_low_level_keyboard_hook ();
++
+ }
+ 
+ gboolean

@@ -140,6 +140,9 @@ class Gtk4(Tarball, Meson):
                 "glib",
                 "fribidi",
             ],
+            patches=[
+                "fix_keyboard_lag.patch",
+            ],
         )
         if self.opts.enable_gi:
             self.add_dependency("gobject-introspection")
