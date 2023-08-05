@@ -14,29 +14,33 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with this program; if not, see <http://www.gnu.org/licenses/>.
-
+from gvsbuild.utils.base_builders import Meson
 from gvsbuild.utils.base_expanders import Tarball
-from gvsbuild.utils.base_project import Project, project_add
+from gvsbuild.utils.base_project import project_add, Project
 
 
 @project_add
-class SQLite(Tarball, Project):
+class Libsigcplusplus(Tarball, Meson):
     def __init__(self):
         Project.__init__(
             self,
-            "sqlite",
-            version="3.42.0",
-            archive_url="https://www.sqlite.org/2023/sqlite-autoconf-{major}{minor:0<3}{micro:0<3}.tar.gz",
-            hash="7abcfd161c6e2742ca5c6c0895d1f853c940f203304a0b49da4e1eca5d088ca6",
+            "libsigc++",
+            prj_dir="libsigc++",
+            version="3.4.0",
+            lastversion_even=True,
+            repository="https://github.com/libsigcplusplus/libsigcplusplus",
+            archive_url="https://github.com/libsigcplusplus/libsigcplusplus/releases/download/{version}/libsigc++-{version}.tar.xz",
+            hash="02e2630ffb5ce93cd52c38423521dfe7063328863a6e96d41d765a6116b8707e",
+            dependencies=[
+                "meson",
+                "ninja",
+            ],
         )
 
     def build(self):
-        nmake_debug = (
-            "DEBUG=2" if self.builder.opts.configuration == "debug" else "DEBUG=0"
+        Meson.build(
+            self,
+            meson_params="-Dbuild-examples=false -Dbuild-documentation=false",
         )
-        self.exec_vs(f"nmake /f Makefile.msc sqlite3.dll DYNAMIC_SHELL=1 {nmake_debug}")
 
-        self.install("sqlite3.h include")
-        self.install("sqlite3ext.h include")
-        self.install("sqlite3.dll sqlite3.pdb bin")
-        self.install("sqlite3.lib lib")
+        self.install(r".\COPYING share\doc\libsigc++")

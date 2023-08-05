@@ -43,8 +43,7 @@ def __get_projects_to_build(opts):
 
     # See if we need to drop some project
     if opts.skip:
-        to_skip = opts.skip.split(",")
-        for s in to_skip:
+        for s in opts.skip:
             if s not in Project.get_names():
                 log.error_exit(
                     s
@@ -108,13 +107,16 @@ def build(
     ),
     build_dir: Path = typer.Option(
         Path(r"C:\gtk-build"),
-        help="The directory to build in",
+        help="The full or relative path of the directory to build in",
         rich_help_panel="Directory Options",
     ),
     msys_dir: Path = typer.Option(
         None,
         help="The directory of the msys installation. If not specified, automatically searches in common locations",
         rich_help_panel="Directory Options",
+        exists=True,
+        dir_okay=True,
+        resolve_path=True,
     ),
     archives_download_dir: Path = typer.Option(
         None,
@@ -200,7 +202,7 @@ def build(
     ),
     skip: List[str] = typer.Option(
         None,
-        help="List of projects to skip. i.e gtk3, glib, ...",
+        help="Project to avoid building, can be run multiple times.",
         rich_help_panel="Skip and Cleanup Options",
     ),
     use_env: bool = typer.Option(
@@ -316,12 +318,14 @@ def build(
     gvsbuild build --no-deps glib
         Build glib only.
 
-    gvsbuild build --skip gtk3,pycairo,pygobject all
-        Build everything except gtk3, pycairo, and pygobject
+    gvsbuild build --skip gtk4 --skip pycairo all
+        Build everything except gtk4 and pycairo
     """
     opts = Options()
     opts.verbose = verbose
     opts.debug = debug
+    if build_dir:
+        build_dir = Path(build_dir).resolve()
     opts.build_dir = str(build_dir)
     log.configure(str(build_dir / "logs"), opts)
     opts.platform = platform.value
@@ -333,30 +337,20 @@ def build(
         opts.configuration = Configuration.release.value
         opts.release_configuration_is_actually_debug_optimized = True
     log.message(f"Build type is {configuration}")
-    if archives_download_dir:
-        opts.archives_download_dir = str(archives_download_dir)
-    else:
+    if not archives_download_dir:
         archives_download_dir = build_dir / "src"
-        opts.archives_download_dir = str(archives_download_dir)
-    if export_dir:
-        opts.export_dir = str(export_dir)
-    else:
-        opts.export_dir = str(build_dir / "export")
-    if patches_root_dir:
-        opts.patches_root_dir = str(patches_root_dir)
-    else:
+    opts.archives_download_dir = str(archives_download_dir)
+    opts.export_dir = str(export_dir) if export_dir else str(build_dir / "export")
+    if not patches_root_dir:
         patches_root_dir = Path(__file__).parent / "patches"
-        opts.patches_root_dir = str(patches_root_dir)
+    opts.patches_root_dir = str(patches_root_dir)
     if tools_root_dir:
         opts.tools_root_dir = str(tools_root_dir)
     else:
         opts.tools_root_dir = str(build_dir / "tools")
     opts.vs_ver = vs_ver.value
     opts.vs_install_path = vs_install_path
-    if win_sdk_ver:
-        opts.win_sdk_ver = win_sdk_ver.value
-    else:
-        opts.win_sdk_ver = None
+    opts.win_sdk_ver = win_sdk_ver.value if win_sdk_ver else None
     if git_expand_dir:
         opts.git_expand_dir = str(git_expand_dir)
     else:

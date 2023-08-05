@@ -75,7 +75,7 @@ class Meson(Project):
         python = Path(sys.executable)
         if " " in str(python):
             python = f'"{python}"'
-        cmd = f"{python} {meson} {self._get_working_dir()} {ninja_build} --prefix {self.builder.gtk_dir} {add_opts}"
+        cmd = f"{python} {meson} setup {self._get_working_dir()} {ninja_build} --prefix {self.builder.gtk_dir} {add_opts}"
 
         # build the ninja file to do everything (build the library, create the .pc file, install it, ...)
         self.exec_vs(cmd, add_path=add_path)
@@ -182,6 +182,7 @@ class Rust(Project):
             params=" ".join(["build"] + params),
             working_dir=self.build_dir,
             rustc_opts=rustc_opts,
+            rust_version=self.version,
         )
 
         # test
@@ -190,6 +191,7 @@ class Rust(Project):
                 params=" ".join(["test"] + params),
                 working_dir=self.build_dir,
                 rustc_opts=rustc_opts,
+                rust_version=self.version,
             )
 
         shutil.copytree(

@@ -26,11 +26,11 @@ class Librsvg(Tarball, Project):
         Project.__init__(
             self,
             "librsvg",
-            version="2.56.0",
+            version="2.56.3",
             lastversion_even=True,
             repository="https://gitlab.gnome.org/GNOME/librsvg",
             archive_url="https://download.gnome.org/sources/librsvg/{major}.{minor}/librsvg-{version}.tar.xz",
-            hash="194b5097d9cd107495f49c291cf0da65ec2b4bb55e5628369751a3f44ba222b3",
+            hash="5a328048a02d014645cd27f61140f4e0b11280fb2c7f2a21864fe0c59ac1ce88",
             dependencies=[
                 "cargo",
                 "cairo",
@@ -38,7 +38,6 @@ class Librsvg(Tarball, Project):
                 "gdk-pixbuf",
                 "libxml2",
             ],
-            patches=[],
         )
         if Project.opts.enable_gi:
             self.add_dependency("gobject-introspection")
@@ -48,7 +47,11 @@ class Librsvg(Tarball, Project):
 
         b_dir = f"{self.builder.working_dir}\\{self.name}\\win32"
 
-        cmd = f"nmake -f makefile.vc CFG={self.builder.opts.configuration} PREFIX={self.builder.gtk_dir} PYTHON={sys.executable} install"
+        config = self.builder.opts.configuration
+        gtk_dir = self.builder.gtk_dir
+        rust_ver = Project.get_project("cargo").version
+        python = sys.executable
+        cmd = f"nmake -f makefile.vc CFG={config} PREFIX={gtk_dir} CARGO=cargo RUSTUP=rustup PYTHON={python} TOOLCHAIN_VERSION={rust_ver} install"
 
         if Project.opts.enable_gi:
             cmd += " INTROSPECTION=1"

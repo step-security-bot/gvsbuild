@@ -15,29 +15,38 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-from gvsbuild.utils.base_builders import CmakeProject
+from gvsbuild.utils.base_builders import Meson
 from gvsbuild.utils.base_expanders import Tarball
-from gvsbuild.utils.base_project import Project, project_add
+from gvsbuild.utils.base_project import project_add
 
 
 @project_add
-class Nghttp2(Tarball, CmakeProject):
+class Gtkmm(Tarball, Meson):
     def __init__(self):
-        Project.__init__(
+        Meson.__init__(
             self,
-            "nghttp2",
-            version="1.55.1",
-            archive_url="https://github.com/nghttp2/nghttp2/releases/download/v{version}/nghttp2-{version}.tar.xz",
-            hash="19490b7c8c2ded1cf7c3e3a54ef4304e3a7876ae2d950d60a81d0dc6053be419",
+            "gtkmm",
+            prj_dir="gtkmm",
+            version="4.10.0",
+            lastversion_major=4,
+            lastversion_even=True,
+            repository="https://gitlab.gnome.org/GNOME/gtkmm",
+            archive_url="https://download.gnome.org/sources/gtkmm/{major}.{minor}/gtkmm-{version}.tar.xz",
+            hash="e1b109771557ecc53cba915a80b6ede827ffdbd0049c62fdf8bd7fa79afcc6eb",
             dependencies=[
-                "cmake",
-                "zlib",
-                "ninja",
+                "gdk-pixbuf",
+                "pangomm",
+                "glibmm",
+                "libepoxy",
+                "cairomm",
+                "gtk4",
             ],
-            patches=["0001-Define-ssize_t-if-not-defined.patch"],
         )
 
     def build(self):
-        CmakeProject.build(self, use_ninja=True)
+        Meson.build(
+            self,
+            meson_params="-Dbuild-tests=false -Dbuild-demos=false",
+        )
 
-        self.install(r".\COPYING share\doc\nghttp2")
+        self.install(r".\COPYING share\doc\gtkmm")

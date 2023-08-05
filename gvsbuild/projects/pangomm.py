@@ -21,18 +21,31 @@ from gvsbuild.utils.base_project import project_add
 
 
 @project_add
-class DcvColorPrimitives(Tarball, Meson):
+class Pangomm(Tarball, Meson):
     def __init__(self):
         Meson.__init__(
             self,
-            "dcv-color-primitives",
-            version="0.5.3",
-            archive_url="https://github.com/aws/dcv-color-primitives/archive/v{version}.tar.gz",
-            archive_file_name="dcv-color-primitives-{version}.tar.gz",
-            hash="cacddfa40ea0321e1b67f73b0fbb66dc319bab548b025844be3f789650d60129",
-            dependencies=["ninja", "meson", "pkgconf", "cargo"],
+            "pangomm",
+            prj_dir="pangomm",
+            version="2.50.1",
+            lastversion_even=True,
+            repository="https://gitlab.gnome.org/GNOME/pangomm",
+            archive_url="https://download.gnome.org/sources/pangomm/{major}.{minor}/pangomm-{version}.tar.xz",
+            hash="ccc9923413e408c2bff637df663248327d72822f11e394b423e1c5652b7d9214",
+            dependencies=[
+                "meson",
+                "ninja",
+                "libsigc++",
+                "cairomm",
+                "pango",
+                "glibmm",
+            ],
         )
 
     def build(self):
-        Meson.build(self, make_tests=False)
-        self.install(r".\LICENSE share\doc\dcv-color-primitives")
+        Meson.build(
+            self,
+            meson_params="-Dbuild-documentation=false",
+        )
+
+        self.install(r".\COPYING share\doc\glibmm")

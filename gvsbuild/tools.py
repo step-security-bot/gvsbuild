@@ -30,7 +30,8 @@ class ToolCargo(Tool):
         Tool.__init__(
             self,
             "cargo",
-            version="stable",
+            version="1.71.0",
+            repository="rust-lang/rust",
             archive_url="https://win.rustup.rs/x86_64",
             archive_file_name="rustup-init.exe",
             exe_name="cargo.exe",
@@ -49,24 +50,12 @@ class ToolCargo(Tool):
         env["RUSTUP_HOME"] = self.build_dir
         env["CARGO_HOME"] = self.build_dir
 
-        rustup = os.path.join(self.build_dir, "bin", "rustup.exe")
-
-        subprocess.check_call(
-            f"{self.archive_file} --no-modify-path -y", shell=True, env=env
+        toolchain = (
+            f'{self.version}-{"i686" if self.opts.x86 else "x86_64"}-pc-windows-msvc'
         )
-
-        # add supported targets
-        subprocess.check_call(
-            f"{rustup} target add x86_64-pc-windows-msvc", shell=True, env=env
-        )
-
-        subprocess.check_call(
-            f"{rustup} target add i686-pc-windows-msvc", shell=True, env=env
-        )
-
-        # switch to the right target
-        subprocess.check_call(
-            f'{rustup} default stable-{"i686" if self.opts.x86 else "x86_64"}-pc-windows-msvc',
+        subprocess.run(
+            f"{self.archive_file} --no-modify-path --default-toolchain {toolchain} -y",
+            check=True,
             env=env,
         )
 
@@ -79,9 +68,9 @@ class ToolCmake(Tool):
         Tool.__init__(
             self,
             "cmake",
-            version="3.26.3",
+            version="3.27.1",
             archive_url="https://github.com/Kitware/CMake/releases/download/v{version}/cmake-{version}-windows-x86_64.zip",
-            hash="91a418595cc9a97d5f679e36728dfec79ee52980f51e8814ec7b05b890708523",
+            hash="664fe1655999f0b693d1e64ddb430191c727ab0a03dc1da7278f291172e1e04e",
             dir_part="cmake-{version}-windows-x86_64",
         )
 
@@ -106,11 +95,10 @@ class ToolMeson(Tool):
         Tool.__init__(
             self,
             "meson",
-            version="1.1.0",
+            version="1.2.0",
             archive_url="https://github.com/mesonbuild/meson/archive/refs/tags/{version}.tar.gz",
             archive_file_name="meson-{version}.tar.gz",
-            hash="f29a3e14062043d75e82d16f1e41856e6b1ed7a7c016e10c7b13afa7ee6364cc",
-            dependencies=[],
+            hash="603489f0aaa6305f806c6cc4a4455a965f22290fc74f65871f589b002110c790",
             dir_part="meson-{version}",
             exe_name="meson.py",
         )
@@ -218,38 +206,14 @@ class ToolPerl(Tool):
 
 
 @tool_add
-class ToolYasm(Tool):
-    def __init__(self):
-        Tool.__init__(
-            self,
-            "yasm",
-            version="1.3.0",
-            archive_url="http://www.tortall.net/projects/yasm/releases/yasm-{version}-win64.exe",
-            hash="d160b1d97266f3f28a71b4420a0ad2cd088a7977c2dd3b25af155652d8d8d91f",
-            dir_part="yasm-{version}",
-            exe_name="yasm.exe",
-        )
-
-    def unpack(self):
-        # We download directly the exe file so we copy it on the tool directory ...
-        self.mark_deps = extract_exec(
-            self.archive_file,
-            self.build_dir,
-            check_file=self.full_exe,
-            force_dest=self.full_exe,
-            check_mark=True,
-        )
-
-
-@tool_add
 class ToolGo(Tool):
     def __init__(self):
         Tool.__init__(
             self,
             "go",
-            version="1.20.3",
+            version="1.20.7",
             archive_url="https://go.dev/dl/go{version}.windows-amd64.zip",
-            hash="143a2837821c7dbacf7744cbb1a8421c1f48307c6fdfaeffc5f8c2f69e1b7932",
+            hash="736dc6c7fcab1c96b682c8c93e38d7e371e62a17d34cb2c37d451a1147f66af9",
             dir_part="go-{version}",
         )
 
