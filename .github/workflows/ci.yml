@@ -56,7 +56,7 @@ jobs:
           --ninja-opts -j2
           --enable-gi
           --py-wheel
-          glib librsvg libpng gdk-pixbuf gtk4 pygobject
+          glib librsvg libpng gdk-pixbuf gtk4 pygobject libadwaita
       - name: Restore git binary
         run: |
           Move-Item "C:\Program Files\Git\usr\notbin" "C:\Program Files\Git\usr\bin"
