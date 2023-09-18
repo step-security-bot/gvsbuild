@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - name: Checkout
-      - uses: actions/checkout@v3.5.3
+        uses: actions/checkout@v3.5.3
       - name: Harden Runner
         uses: step-security/harden-runner@8ca2b8b2ece13480cda6dacd3511b49857a23c09 # v2.5.1
         with:
