@@ -34,7 +34,6 @@ class PyGObject(Tarball, Meson):
             dependencies=["pycairo", "gobject-introspection", "libffi"],
             patches=[
                 "pygobject_py3_8_load_dll.patch",
-                "cssprovider_load_from_data.patch",
             ],
         )
 
