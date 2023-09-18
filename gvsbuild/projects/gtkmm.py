@@ -1,6 +1,4 @@
-#  Copyright (C) 2016 - Yevgen Muntyan
-#  Copyright (C) 2016 - Ignacio Casal Quinteiro
-#  Copyright (C) 2016 - Arnavion
+#  Copyright (C) 2016 The Gvsbuild Authors
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -27,12 +25,12 @@ class Gtkmm(Tarball, Meson):
             self,
             "gtkmm",
             prj_dir="gtkmm",
-            version="4.10.0",
+            version="4.12.0",
             lastversion_major=4,
             lastversion_even=True,
             repository="https://gitlab.gnome.org/GNOME/gtkmm",
             archive_url="https://download.gnome.org/sources/gtkmm/{major}.{minor}/gtkmm-{version}.tar.xz",
-            hash="e1b109771557ecc53cba915a80b6ede827ffdbd0049c62fdf8bd7fa79afcc6eb",
+            hash="fbc3e7618123345c0148ef71abb6548d421f52bb224fbda34875b677dc032c92",
             dependencies=[
                 "gdk-pixbuf",
                 "pangomm",

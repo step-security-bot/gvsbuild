@@ -1,6 +1,4 @@
-#  Copyright (C) 2016 - Yevgen Muntyan
-#  Copyright (C) 2016 - Ignacio Casal Quinteiro
-#  Copyright (C) 2016 - Arnavion
+#  Copyright (C) 2016 The Gvsbuild Authors
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -30,7 +28,7 @@ class ToolCargo(Tool):
         Tool.__init__(
             self,
             "cargo",
-            version="1.71.1",
+            version="1.72.0",
             repository="rust-lang/rust",
             archive_url="https://win.rustup.rs/x86_64",
             archive_file_name="rustup-init.exe",
@@ -68,9 +66,9 @@ class ToolCmake(Tool):
         Tool.__init__(
             self,
             "cmake",
-            version="3.27.1",
+            version="3.27.5",
             archive_url="https://github.com/Kitware/CMake/releases/download/v{version}/cmake-{version}-windows-x86_64.zip",
-            hash="664fe1655999f0b693d1e64ddb430191c727ab0a03dc1da7278f291172e1e04e",
+            hash="1e8e06c8ecf63d5f213019e1cd39ea41a6cf952db5f2c8e69b8e47f5bc302684",
             dir_part="cmake-{version}-windows-x86_64",
         )
 
@@ -95,10 +93,10 @@ class ToolMeson(Tool):
         Tool.__init__(
             self,
             "meson",
-            version="1.2.0",
+            version="1.2.1",
             archive_url="https://github.com/mesonbuild/meson/archive/refs/tags/{version}.tar.gz",
             archive_file_name="meson-{version}.tar.gz",
-            hash="603489f0aaa6305f806c6cc4a4455a965f22290fc74f65871f589b002110c790",
+            hash="e1f3b32b636cc86496261bd89e63f00f206754697c7069788b62beed5e042713",
             dir_part="meson-{version}",
             exe_name="meson.py",
         )
@@ -211,9 +209,9 @@ class ToolGo(Tool):
         Tool.__init__(
             self,
             "go",
-            version="1.20.7",
+            version="1.21.1",
             archive_url="https://go.dev/dl/go{version}.windows-amd64.zip",
-            hash="736dc6c7fcab1c96b682c8c93e38d7e371e62a17d34cb2c37d451a1147f66af9",
+            hash="10a4f5b63215d11d1770453733dbcbf024f3f74872f84e28d7ea59f0250316c6",
             dir_part="go-{version}",
         )
 
