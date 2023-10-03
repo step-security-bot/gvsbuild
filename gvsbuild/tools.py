@@ -28,7 +28,7 @@ class ToolCargo(Tool):
         Tool.__init__(
             self,
             "cargo",
-            version="1.72.0",
+            version="1.72.1",
             repository="rust-lang/rust",
             archive_url="https://win.rustup.rs/x86_64",
             archive_file_name="rustup-init.exe",
@@ -66,9 +66,9 @@ class ToolCmake(Tool):
         Tool.__init__(
             self,
             "cmake",
-            version="3.27.5",
+            version="3.27.6",
             archive_url="https://github.com/Kitware/CMake/releases/download/v{version}/cmake-{version}-windows-x86_64.zip",
-            hash="1e8e06c8ecf63d5f213019e1cd39ea41a6cf952db5f2c8e69b8e47f5bc302684",
+            hash="f013a0cca091aa953f9a60a99292ec7a20ae3f9ceb05cb5c08ebe164097c526f",
             dir_part="cmake-{version}-windows-x86_64",
         )
 
@@ -93,12 +93,13 @@ class ToolMeson(Tool):
         Tool.__init__(
             self,
             "meson",
-            version="1.2.1",
+            version="1.2.2",
             archive_url="https://github.com/mesonbuild/meson/archive/refs/tags/{version}.tar.gz",
             archive_file_name="meson-{version}.tar.gz",
-            hash="e1f3b32b636cc86496261bd89e63f00f206754697c7069788b62beed5e042713",
+            hash="1caa0ef6082e311bdca9836e7907f548b8c3f041a42ed41f0ff916b83ac7dddd",
             dir_part="meson-{version}",
             exe_name="meson.py",
+            patches=["0001-find-tool-pkgconfig-variable.patch"],
         )
 
     def unpack(self):
