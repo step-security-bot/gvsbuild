@@ -28,10 +28,10 @@ class ToolCargo(Tool):
         Tool.__init__(
             self,
             "cargo",
-            version="1.72.1",
+            version="1.73.0",
             repository="rust-lang/rust",
             archive_url="https://win.rustup.rs/x86_64",
-            archive_file_name="rustup-init.exe",
+            archive_filename="rustup-init.exe",
             exe_name="cargo.exe",
         )
 
@@ -66,9 +66,9 @@ class ToolCmake(Tool):
         Tool.__init__(
             self,
             "cmake",
-            version="3.27.6",
+            version="3.27.7",
             archive_url="https://github.com/Kitware/CMake/releases/download/v{version}/cmake-{version}-windows-x86_64.zip",
-            hash="f013a0cca091aa953f9a60a99292ec7a20ae3f9ceb05cb5c08ebe164097c526f",
+            hash="5588e50030cda3e6fa96724444d8539916ac808d78d608cda6ae6ff7c4c4c9c8",
             dir_part="cmake-{version}-windows-x86_64",
         )
 
@@ -93,13 +93,12 @@ class ToolMeson(Tool):
         Tool.__init__(
             self,
             "meson",
-            version="1.2.2",
+            version="1.2.3",
             archive_url="https://github.com/mesonbuild/meson/archive/refs/tags/{version}.tar.gz",
-            archive_file_name="meson-{version}.tar.gz",
-            hash="1caa0ef6082e311bdca9836e7907f548b8c3f041a42ed41f0ff916b83ac7dddd",
+            archive_filename="meson-{version}.tar.gz",
+            hash="1340bbc017eead2ddf706fb36a6dcc46796deec6b1513005de67e862c1b737cf",
             dir_part="meson-{version}",
             exe_name="meson.py",
-            patches=["0001-find-tool-pkgconfig-variable.patch"],
         )
 
     def unpack(self):
@@ -163,7 +162,7 @@ class ToolNinja(Tool):
             "ninja",
             version="1.11.1",
             archive_url="https://github.com/ninja-build/ninja/releases/download/v{version}/ninja-win.zip",
-            archive_file_name="ninja-win-{version}.zip",
+            archive_filename="ninja-win-{version}.zip",
             hash="524b344a1a9a55005eaf868d991e090ab8ce07fa109f1820d40e74642e289abc",
             dir_part="ninja-{version}",
             exe_name="ninja.exe",
@@ -210,9 +209,9 @@ class ToolGo(Tool):
         Tool.__init__(
             self,
             "go",
-            version="1.21.1",
+            version="1.21.3",
             archive_url="https://go.dev/dl/go{version}.windows-amd64.zip",
-            hash="10a4f5b63215d11d1770453733dbcbf024f3f74872f84e28d7ea59f0250316c6",
+            hash="27c8daf157493f288d42a6f38debc6a2cb391f6543139eba9152fceca0be2a10",
             dir_part="go-{version}",
         )
 
