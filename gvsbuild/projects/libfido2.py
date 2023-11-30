@@ -26,9 +26,9 @@ class Libfido2(Tarball, CmakeProject):
         Project.__init__(
             self,
             "libfido2",
-            version="1.13.0",
+            version="1.14.0",
             archive_url="https://developers.yubico.com/libfido2/Releases/libfido2-{version}.tar.gz",
-            hash="51d43727e2a1c4544c7fd0ee47786f443e39f1388ada735a509ad4af0a2459ca",
+            hash="3601792e320032d428002c4cce8499a4c7b803319051a25a0c9f1f138ffee45a",
             dependencies=[
                 "cmake",
                 "ninja",
@@ -36,7 +36,10 @@ class Libfido2(Tarball, CmakeProject):
                 "openssl",
                 "libcbor",
             ],
-            patches=["0001-libfido2-update-cmake-script-to-have-sdl-flag-before.patch"],
+            patches=[
+                "0001-libfido2-update-cmake-script-to-have-sdl-flag-before.patch",
+                "0001-Install-pkgconfig-files-also-on-msvc.patch",
+            ],
         )
 
     def build(self):
@@ -48,9 +51,9 @@ class Libfido2(Tarball, CmakeProject):
         include_dirs = os.path.join(self.builder.gtk_dir, "inc")
         lib_dirs = os.path.join(self.builder.gtk_dir, "lib")
         bin_dirs = lib_dirs = os.path.join(self.builder.gtk_dir, "bin")
-        # Build static libs only for libfido2
-        build_params = '-DBUILD_EXAMPLES=OFF -DBUILD_MANPAGES=OFF -DBUILD_TESTS=OFF -DBUILD_TOOLS=OFF -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_FLAGS_DEBUG="/MTd /D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_DEPRECATE" -DCMAKE_C_FLAGS_RELEASE="/MT /D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_DEPRECATE"'
-        cmake_params = f"-DWITH_ZLIB=ON -DCBOR_INCLUDE_DIRS={include_dirs} -DCRYPTO_INCLUDE_DIRS={include_dirs} -DZLIB_INCLUDE_DIRS={include_dirs} -DCBOR_LIBRARY_DIRS={lib_dirs} -DCRYPTO_LIBRARY_DIRS={lib_dirs} -DZLIB_LIBRARY_DIRS={lib_dirs} -DCBOR_BIN_DIRS={bin_dirs} -DCRYPTO_BIN_DIRS={bin_dirs} -DZLIB_BIN_DIRS={bin_dirs} {build_params}"
+
+        build_params = "-DBUILD_EXAMPLES=OFF -DBUILD_MANPAGES=OFF -DBUILD_TESTS=OFF -DBUILD_TOOLS=OFF -DBUILD_STATIC_LIBS=OFF"
+        cmake_params = f"-DWITH_ZLIB=ON -DCBOR_INCLUDE_DIRS={include_dirs} -DCRYPTO_INCLUDE_DIRS={include_dirs} -DZLIB_INCLUDE_DIRS={include_dirs} -DCBOR_LIBRARY_DIRS={lib_dirs} -DCRYPTO_LIBRARY_DIRS={lib_dirs} -DZLIB_LIBRARY_DIRS={lib_dirs} -DCBOR_BIN_DIRS={bin_dirs} -DCRYPTO_BIN_DIRS={bin_dirs} -DZLIB_BIN_DIRS={bin_dirs} -DCRYPTO_LIBRARIES=libcrypto {build_params}"
 
         CmakeProject.build(self, cmake_params=cmake_params, use_ninja=True)
         self.install(r"output\%s\static\* ." % (arch))

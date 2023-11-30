@@ -25,9 +25,9 @@ class OpenSSL(Tarball, Project):
         Project.__init__(
             self,
             "openssl",
-            version="3.1.4",
+            version="3.2.0",
             archive_url="https://www.openssl.org/source/openssl-{version}.tar.gz",
-            hash="840af5366ab9b522bde525826be3ef0fb0af81c6a9ebd84caa600fea1731eee3",
+            hash="14c826f07c7e433706fb5c69fa9e25dab95684844b4c962a2cf1bf183eb4690e",
             dependencies=[
                 "perl",
                 "nasm",
@@ -36,7 +36,7 @@ class OpenSSL(Tarball, Project):
         )
 
     def build(self):
-        common_options = r"no-ssl2 no-ssl3 no-comp --openssldir=%(gtk_dir)s/etc/ssl --prefix=%(gtk_dir)s"
+        common_options = r"no-comp no-docs no-ssl3 --openssldir=%(gtk_dir)s/etc/ssl --prefix=%(gtk_dir)s"
 
         debug_option = "debug-" if self.builder.opts.configuration == "debug" else ""
         # Note that we want to give priority to the system perl version.
@@ -45,20 +45,13 @@ class OpenSSL(Tarball, Project):
         #                             os.path.join(self.builder.opts.msys_dir, 'usr', 'bin')])
         add_path = None
 
-        if self.builder.x86:
-            self.exec_vs(
-                r"%(perl_dir)s\bin\perl.exe Configure "
-                + debug_option
-                + "VC-WIN32 "
-                + common_options
-            )
-        else:
-            self.exec_vs(
-                r"%(perl_dir)s\bin\perl.exe Configure "
-                + debug_option
-                + "VC-WIN64A "
-                + common_options
-            )
+        target_option = "VC-WIN32 " if self.builder.x86 else "VC-WIN64A "
+        self.exec_vs(
+            r"%(perl_dir)s\bin\perl.exe Configure "
+            + debug_option
+            + target_option
+            + common_options
+        )
 
         with contextlib.suppress(Exception):
             self.exec_vs(r"nmake /nologo clean", add_path=add_path)

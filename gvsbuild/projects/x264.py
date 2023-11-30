@@ -29,7 +29,10 @@ class X264(GitRepo, Project):
             repo_url="http://git.videolan.org/git/x264.git",
             fetch_submodules=False,
             dependencies=["nasm", "msys2"],
-            tag="bfc87b7a330f75f5c9a21e56081e4b20344f139e",
+            tag="31e19f92f00c7003fa115047ce50978bc98c3a0d",
+            patches=[
+                "x264-0001-Prevent-mb_info_free-to-be-called-before-all-threads.patch",
+            ],
         )
 
     def build(self):

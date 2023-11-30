@@ -26,14 +26,11 @@ class Ffmpeg(Tarball, Project):
         Project.__init__(
             self,
             "ffmpeg",
-            version="6.0",
+            version="6.1",
             archive_url="https://ffmpeg.org/releases/ffmpeg-{version}.tar.xz",
-            hash="57be87c22d9b49c112b6d24bc67d42508660e6b718b3db89c44e47e289137082",
+            hash="488c76e57dd9b3bee901f71d5c95eaf1db4a5a31fe46a28654e837144207c270",
             dependencies=["nasm", "msys2", "pkgconf", "nv-codec-headers"],
-            patches=[
-                "0001-lavu-add-video_hint-API.patch",
-                "0002-lavc-libx264-add-mb_info-option.patch",
-            ],
+            patches=[],
         )
         if self.opts.ffmpeg_enable_gpl:
             self.add_dependency("x264")
@@ -65,14 +62,14 @@ class Ffmpeg(Tarball, Project):
 
 
 @project_add
-class Project_nv_codec_headers(Tarball, Project):
+class NvCodecHeaders(Tarball, Project):
     def __init__(self):
         Project.__init__(
             self,
             "nv-codec-headers",
-            version="11.1.5.2",
+            version="12.1.14.0",
             archive_url="https://github.com/FFmpeg/nv-codec-headers/releases/download/n{version}/nv-codec-headers-{version}.tar.gz",
-            hash="1442e3159e7311dd71f8fca86e615f51609998939b6a6d405d6683d8eb3af6ee",
+            hash="62b30ab37e4e9be0d0c5b37b8fee4b094e38e570984d56e1135a6b6c2c164c9f",
         )
 
     def build(self):
