@@ -3,12 +3,18 @@ on:
     types: [published]
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 name: Build
 
 jobs:
   build:
     name: Build GTK Binaries
     runs-on: windows-latest
+    permissions:
+      contents: write
     timeout-minutes: 75
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     strategy:
@@ -46,11 +52,6 @@ jobs:
           poetry config virtualenvs.in-project true
       - name: Install Python Dependencies
         run: poetry install
-      # Temporarily move the preinstalled git, it causes errors related to cygwin.
-      - name: Move git binary
-        run: |
-          Move-Item "C:\Program Files\Git\usr\bin" "C:\Program Files\Git\usr\notbin"
-          Move-Item "C:\Program Files\Git\bin" "C:\Program Files\Git\notbin"
       - name: Build GTK4
         run: > # Use -j2 option to prevent out of memory errors with GitHub Action runners
           poetry run gvsbuild build
@@ -60,10 +61,6 @@ jobs:
           --enable-gi
           --py-wheel
           glib librsvg libpng gdk-pixbuf gtk4 pygobject libadwaita
-      - name: Restore git binary
-        run: |
-          Move-Item "C:\Program Files\Git\usr\notbin" "C:\Program Files\Git\usr\bin"
-          Move-Item "C:\Program Files\Git\notbin" "C:\Program Files\Git\bin"
 
       - name: Zip Bundle
         run: >
