@@ -19,16 +19,16 @@ from gvsbuild.utils.base_project import Project, project_add
 
 
 @project_add
-class GLib(Tarball, Meson):
+class GLibBase(Tarball, Meson):
     def __init__(self):
-        Project.__init__(
+        Meson.__init__(
             self,
-            "glib",
-            version="2.78.1",
+            "glib-base",
+            version="2.80.2",
             lastversion_even=True,
             repository="https://gitlab.gnome.org/GNOME/glib",
             archive_url="https://download.gnome.org/sources/glib/{major}.{minor}/glib-{version}.tar.xz",
-            hash="915bc3d0f8507d650ead3832e2f8fb670fce59aac4d7754a7dab6f1e6fed78b2",
+            hash="b9cfb6f7a5bd5b31238fd5d56df226b2dda5ea37611475bf89f6a0f9400fe8bd",
             dependencies=[
                 "ninja",
                 "meson",
@@ -39,13 +39,49 @@ class GLib(Tarball, Meson):
                 "pcre2",
             ],
             patches=[
-                "glib-package-installation-directory.patch",
+                "001-glib-package-installation-directory.patch",
+                # https://gitlab.gnome.org/GNOME/gobject-introspection/-/issues/499
+                "002-gir-scanner-dll-not-found.patch",
             ],
         )
+        self.add_param("-Dman-pages=disabled")
+        self.add_param("-Dtests=false")
+        self.add_param("-Ddocumentation=false")
+        self.add_param("-Dintrospection=disabled")
 
     def build(self):
         Meson.build(self)
         self.install(r".\LICENSES\* share\doc\glib")
+
+
+@project_add
+class GLib(Tarball, Meson):
+    def __init__(self):
+        Meson.__init__(
+            self,
+            "glib",
+            version="2.80.2",
+            lastversion_even=True,
+            repository="https://gitlab.gnome.org/GNOME/glib",
+            archive_url="https://download.gnome.org/sources/glib/{major}.{minor}/glib-{version}.tar.xz",
+            hash="b9cfb6f7a5bd5b31238fd5d56df226b2dda5ea37611475bf89f6a0f9400fe8bd",
+            dependencies=["glib-base"],
+            patches=[
+                "001-glib-package-installation-directory.patch",
+                # https://gitlab.gnome.org/GNOME/gobject-introspection/-/issues/499
+                "002-gir-scanner-dll-not-found.patch",
+            ],
+        )
+        self.add_param("-Dman-pages=disabled")
+        self.add_param("-Dtests=false")
+        self.add_param("-Ddocumentation=false")
+        if self.opts.enable_gi:
+            self.add_dependency("gobject-introspection")
+            self.add_param("-Dintrospection=enabled")
+
+    def build(self):
+        if self.opts.enable_gi:
+            Meson.build(self)
 
 
 @project_add
@@ -54,11 +90,11 @@ class GLibNetworking(Tarball, Meson):
         Project.__init__(
             self,
             "glib-networking",
-            version="2.78.0",
+            version="2.80.0",
             lastversion_even=True,
             repository="https://gitlab.gnome.org/GNOME/glib-networking",
             archive_url="https://download.gnome.org/sources/glib-networking/{major}.{minor}/glib-networking-{version}.tar.xz",
-            hash="52fe4ce93f7dc51334b102894599858d23c8a65ac4a1110b30920565d68d3aba",
+            hash="d8f4f1aab213179ae3351617b59dab5de6bcc9e785021eee178998ebd4bb3acf",
             dependencies=[
                 "pkgconf",
                 "ninja",
@@ -66,6 +102,9 @@ class GLibNetworking(Tarball, Meson):
                 "glib",
                 "openssl",
                 "gsettings-desktop-schemas",
+            ],
+            patches=[
+                "add-null-check-in-complete_handshake.patch",
             ],
         )
 

@@ -37,6 +37,7 @@ class ProjectType(str, Enum):
 class Options:
     def __init__(self):
         self.enable_gi = False
+        self.enable_fips = False
         self.ffmpeg_enable_gpl = False
         self.verbose = False
         self.debug = False
@@ -409,11 +410,11 @@ class Project(Generic[P]):
 
     def install_pc_files(self, base_dir="pc-files"):
         """Install, setting dir & version, the .pc files."""
-        pkgconfig_dir = os.path.join(self.builder.gtk_dir, "lib", "pkgconfig")
+        pkgconfig_dir = os.path.join(self.pkg_dir, "lib", "pkgconfig")
         self.builder.make_dir(pkgconfig_dir)
 
         src_dir = os.path.join(self._get_working_dir(), base_dir)
-        log.debug(f"Copy .pc files from {src_dir}")
+        log.debug(f"Copy .pc files from {src_dir} to {pkgconfig_dir}")
         gtk_dir = self.builder.gtk_dir.replace("\\", "/")
         for f in os.scandir(src_dir):
             if f.is_file():

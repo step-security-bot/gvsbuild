@@ -12,7 +12,7 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with this program; if not, see <http://www.gnu.org/licenses/>.
-
+import sys
 from pathlib import Path
 
 from gvsbuild.utils.base_builders import Meson
@@ -26,19 +26,20 @@ class PyGObject(Tarball, Meson):
         Project.__init__(
             self,
             "pygobject",
-            version="3.46.0",
+            version="3.48.2",
             lastversion_even=True,
             repository="https://gitlab.gnome.org/GNOME/pygobject",
             archive_url="https://download.gnome.org/sources/pygobject/{major}.{minor}/pygobject-{version}.tar.xz",
-            hash="426008b2dad548c9af1c7b03b59df0440fde5c33f38fb5406b103a43d653cafc",
+            hash="0794aeb4a9be31a092ac20621b5f54ec280f9185943d328b105cdae6298ad1a7",
             dependencies=["pycairo", "gobject-introspection", "libffi"],
             patches=[
-                "pygobject_py3_8_load_dll.patch",
+                "001-pygobject-py38-load-dll.patch",
             ],
         )
 
     def build(self):
-        Meson.build(self)
+        py_dir = Path(sys.executable).parent
+        Meson.build(self, meson_params=f'-Dpython="{py_dir}\\python.exe"')
         gtk_dir = self.builder.gtk_dir
         add_inc = [
             str(Path(gtk_dir) / "include" / "cairo"),
@@ -47,13 +48,13 @@ class PyGObject(Tarball, Meson):
             str(Path(gtk_dir) / "lib" / "glib-2.0" / "include"),
         ]
         self.builder.mod_env("INCLUDE", ";".join(add_inc))
-        self.exec_vs(r"%(python_dir)s\python.exe -m build")
-        dist_dir = Path(self.build_dir) / "dist"
-        for path in dist_dir.rglob("*.whl"):
-            self.exec_vs(
-                r"%(python_dir)s\python.exe -m pip install --force-reinstall "
-                + str(path)
-            )
         if self.builder.opts.py_wheel:
-            self.install_dir("dist", "python")
+            self.exec_vs(r"%(python_dir)s\python.exe -m build --wheel")
+            dist_dir = Path(self.build_dir) / "dist"
+            for path in dist_dir.rglob("*.whl"):
+                self.exec_vs(
+                    r"%(python_dir)s\python.exe -m pip install --force-reinstall "
+                    + str(path)
+                )
+                self.install_dir("dist", "python")
         self.install(r".\COPYING share\doc\pygobject")

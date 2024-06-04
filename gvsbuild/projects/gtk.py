@@ -90,12 +90,12 @@ class Gtk3(Tarball, Meson):
             self,
             "gtk3",
             prj_dir="gtk3",
-            version="3.24.38",
+            version="3.24.42",
             lastversion_major=3,
             lastversion_even=True,
             repository="https://gitlab.gnome.org/GNOME/gtk",
             archive_url="https://download.gnome.org/sources/gtk%2B/{major}.{minor}/gtk%2B-{version}.tar.xz",
-            hash="ce11decf018b25bdd8505544a4f87242854ec88be054d9ade5f3a20444dd8ee7",
+            hash="50f89f615092d4dd01bbd759719f8bd380e5f149f6fd78a94725e2de112377e2",
             dependencies=["atk", "gdk-pixbuf", "pango", "libepoxy"],
             patches=[
                 "gtk_update_icon_cache.patch",
@@ -122,12 +122,12 @@ class Gtk4(Tarball, Meson):
             self,
             "gtk4",
             prj_dir="gtk4",
-            version="4.12.4",
+            version="4.14.4",
             lastversion_major=4,
             lastversion_even=True,
             repository="https://gitlab.gnome.org/GNOME/gtk",
             archive_url="https://download.gnome.org/sources/gtk/{major}.{minor}/gtk-{version}.tar.xz",
-            hash="ba67c6498e5599f928edafb9e08a320adfaa50ab2f0da6fc6ab2252fc2d57520",
+            hash="443518b97e8348f9f6430ac435b1010f9a6c5207f4dc6a7cd5d24e3820cee633",
             dependencies=[
                 "gdk-pixbuf",
                 "pango",
@@ -149,11 +149,13 @@ class Gtk4(Tarball, Meson):
             enable_gi = "disabled"
 
         self.add_param(f"-Dintrospection={enable_gi}")
+        self.add_param("-Dbuild-tests=false")
+        self.add_param("-Dbuild-testsuite=false")
+        self.add_param("-Dbuild-demos=false")
+        self.add_param("-Dbuild-examples=false")
+        self.add_param("-Dmedia-gstreamer=disabled")
+        self.add_param("-Dvulkan=disabled")
 
     def build(self):
-        Meson.build(
-            self,
-            meson_params="-Dbuild-tests=false -Ddemos=false -Dbuild-examples=false -Dmedia-gstreamer=disabled",
-        )
-
+        Meson.build(self)
         self.install(r".\COPYING share\doc\gtk4")

@@ -14,13 +14,12 @@ from gvsbuild.projects.emeus import Emeus
 from gvsbuild.projects.enchant import Enchant
 from gvsbuild.projects.expat import Expat
 from gvsbuild.projects.ffmpeg import Ffmpeg, NvCodecHeaders
-from gvsbuild.projects.fontconfig import Fontconfig
 from gvsbuild.projects.freerdp import FreeRDP
 from gvsbuild.projects.freetype import Freetype
 from gvsbuild.projects.fribidi import Fribidi
 from gvsbuild.projects.gdk_pixbuf import GdkPixbuf
 from gvsbuild.projects.gettext import Gettext
-from gvsbuild.projects.glib import GLib, GLibNetworking, GLibPyWrapper
+from gvsbuild.projects.glib import GLib, GLibBase, GLibNetworking, GLibPyWrapper
 from gvsbuild.projects.glibmm import Glibmm
 from gvsbuild.projects.gobject_introspection import GObjectIntrospection
 from gvsbuild.projects.gperf import Gperf
@@ -50,7 +49,6 @@ from gvsbuild.projects.lgi import Lgi
 from gvsbuild.projects.libadwaita import Libadwaita
 from gvsbuild.projects.libarchive import Libarchive
 from gvsbuild.projects.libcbor import Libcbor
-from gvsbuild.projects.libcroco import Libcroco
 from gvsbuild.projects.libcurl import Libcurl
 from gvsbuild.projects.libepoxy import Libepoxy
 from gvsbuild.projects.libfido2 import Libfido2
@@ -58,6 +56,7 @@ from gvsbuild.projects.libffi import Libffi
 from gvsbuild.projects.libgxps import Libgxps
 from gvsbuild.projects.libjpeg_turbo import LibjpegTurbo
 from gvsbuild.projects.libmicrohttpd import Libmicrohttpd
+from gvsbuild.projects.libpanel import Libpanel
 from gvsbuild.projects.libpng import Libpng
 from gvsbuild.projects.libpsl import Libpsl
 from gvsbuild.projects.librsvg import Librsvg
@@ -79,6 +78,7 @@ from gvsbuild.projects.nghttp2 import Nghttp2
 from gvsbuild.projects.ogg import Ogg
 from gvsbuild.projects.openh264 import OpenH264
 from gvsbuild.projects.openssl import OpenSSL
+from gvsbuild.projects.openssl import OpenSSLFips
 from gvsbuild.projects.opus import Opus
 from gvsbuild.projects.pango import Pango
 from gvsbuild.projects.pangomm import Pangomm

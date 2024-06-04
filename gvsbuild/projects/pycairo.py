@@ -12,7 +12,7 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with this program; if not, see <http://www.gnu.org/licenses/>.
-
+import sys
 from pathlib import Path
 
 from gvsbuild.utils.base_builders import Meson
@@ -26,14 +26,15 @@ class Pycairo(Tarball, Meson):
         Meson.__init__(
             self,
             "pycairo",
-            version="1.25.1",
+            version="1.26.0",
             archive_url="https://github.com/pygobject/pycairo/releases/download/v{version}/pycairo-{version}.tar.gz",
-            hash="7e2be4fbc3b4536f16db7a11982cbf713e75069a4d73d44fe5a49b68423f5c0c",
+            hash="2dddd0a874fbddb21e14acd9b955881ee1dc6e63b9c549a192d613a907f9cbeb",
             dependencies=["cairo"],
         )
 
     def build(self):
-        Meson.build(self)
+        py_dir = Path(sys.executable).parent
+        Meson.build(self, meson_params=f'-Dpython="{py_dir}\\python.exe"')
         cairo_inc = Path(self.builder.gtk_dir) / "include" / "cairo"
         self.builder.mod_env("INCLUDE", str(cairo_inc))
         self.exec_vs(r"%(python_dir)s\python.exe -m build")

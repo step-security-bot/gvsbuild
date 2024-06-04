@@ -28,7 +28,7 @@ class ToolCargo(Tool):
         Tool.__init__(
             self,
             "cargo",
-            version="1.74.0",
+            version="1.78.0",
             repository="rust-lang/rust",
             archive_url="https://win.rustup.rs/x86_64",
             archive_filename="rustup-init.exe",
@@ -66,9 +66,9 @@ class ToolCmake(Tool):
         Tool.__init__(
             self,
             "cmake",
-            version="3.27.8",
+            version="3.29.3",
             archive_url="https://github.com/Kitware/CMake/releases/download/v{version}/cmake-{version}-windows-x86_64.zip",
-            hash="53c6f57bda4a20e2a0515246a298e3c0784da3b687ef2a00a55bdcfad450998c",
+            hash="6423ed300e6aa1b15c4aeae9a7399157f53fc84a2fb7242ca64c8dfd83e5f8a6",
             dir_part="cmake-{version}-windows-x86_64",
         )
 
@@ -93,10 +93,10 @@ class ToolMeson(Tool):
         Tool.__init__(
             self,
             "meson",
-            version="1.3.0",
+            version="1.4.1",
             archive_url="https://github.com/mesonbuild/meson/archive/refs/tags/{version}.tar.gz",
             archive_filename="meson-{version}.tar.gz",
-            hash="6c4b4f35b51a260b362535fd32fee6d244871be38a2880f4de3ea9c6e69a0808",
+            hash="a7efc72ecb873c5a62031ade1921a7177b67cfdcb2e9410a7ab023f9e8192f4b",
             dir_part="meson-{version}",
             exe_name="meson.py",
         )
@@ -135,9 +135,9 @@ class ToolNasm(Tool):
         Tool.__init__(
             self,
             "nasm",
-            version="2.16.01",
+            version="2.16.03",
             archive_url="https://www.nasm.us/pub/nasm/releasebuilds/{version}/win64/nasm-{version}-win64.zip",
-            hash="029eed31faf0d2c5f95783294432cbea6c15bf633430f254bb3c1f195c67ca3a",
+            hash="3ee4782247bcb874378d02f7eab4e294a84d3d15f3f6ee2de2f47a46aa7226e6",
             dir_part="nasm-{version}",
             exe_name="nasm.exe",
         )
@@ -160,10 +160,10 @@ class ToolNinja(Tool):
         Tool.__init__(
             self,
             "ninja",
-            version="1.11.1",
+            version="1.12.1",
             archive_url="https://github.com/ninja-build/ninja/releases/download/v{version}/ninja-win.zip",
             archive_filename="ninja-win-{version}.zip",
-            hash="524b344a1a9a55005eaf868d991e090ab8ce07fa109f1820d40e74642e289abc",
+            hash="f550fec705b6d6ff58f2db3c374c2277a37691678d6aba463adcbb129108467a",
             dir_part="ninja-{version}",
             exe_name="ninja.exe",
         )
@@ -209,9 +209,10 @@ class ToolGo(Tool):
         Tool.__init__(
             self,
             "go",
-            version="1.21.4",
+            version="1.22.3",
+            repository="https://github.com/golang/go",
             archive_url="https://go.dev/dl/go{version}.windows-amd64.zip",
-            hash="79e5428e068c912d9cfa6cd115c13549856ec689c1332eac17f5d6122e19d595",
+            hash="cab2af6951a6e2115824263f6df13ff069c47270f5788714fa1d776f7f60cb39",
             dir_part="go-{version}",
         )
 

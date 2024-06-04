@@ -24,17 +24,16 @@ class Opus(Tarball, Meson):
         Meson.__init__(
             self,
             "opus",
-            version="1.4",
+            version="1.5.2",
             repository="https://github.com/xiph/opus",
-            archive_url="https://github.com/xiph/opus/releases/download/v{version}/opus-{version}.tar.gz",
-            hash="c9b32b4253be5ae63d1ff16eea06b94b5f0f2951b7a02aceef58e3a3ce49c51f",
+            archive_url="https://downloads.xiph.org/releases/opus/opus-{version}.tar.gz",
+            hash="65c1d2f78b9f2fb20082c38cbe47c951ad5839345876e46941612ee87f9a7ce1",
             dependencies=[
                 "ninja",
                 "meson",
                 "pkgconf",
             ],
         )
-
         self.add_param("-Dtests=disabled")
         self.add_param("-Ddocs=disabled")
 

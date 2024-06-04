@@ -39,6 +39,8 @@ def __get_projects_to_build(opts):
         to_build.add(p)
         if opts.clean_built:
             p.clean = True
+        if name == "openssl" and opts.enable_fips:
+            to_build.add(Project.get_project("openssl-fips"))
 
     # See if we need to drop some project
     if opts.skip:
@@ -86,6 +88,7 @@ class WinSdkVersion(str, Enum):
     sdk_16299 = "10.0.16299.0"
     sdk_17134 = "10.0.17134.0"
     sdk_17763 = "10.0.17763.0"
+    sdk_22621 = "10.0.22621.0"
 
 
 class PythonVersion(str, Enum):
@@ -258,6 +261,11 @@ def build(
         help="For the GTK stack, create the .gir/.typelib files for gobject introspection",
         rich_help_panel="Introspection Options",
     ),
+    enable_fips: bool = typer.Option(
+        False,
+        help="Build the FIPS validated cryptographic module",
+        rich_help_panel="OpenSSL Options",
+    ),
     ffmpeg_enable_gpl: bool = typer.Option(
         False,
         help="ffmpeg: build with the gpl libraries/modules",
@@ -372,6 +380,7 @@ def build(
     opts.clean_built = clean_built
     opts.py_wheel = py_wheel
     opts.enable_gi = enable_gi
+    opts.enable_fips = enable_fips
     opts.ffmpeg_enable_gpl = ffmpeg_enable_gpl
     opts.log_size = log_size
     opts.log_single = log_single

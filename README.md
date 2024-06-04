@@ -1,9 +1,45 @@
 # gvsbuild
 
-![CI](https://github.com/wingtk/gvsbuild/workflows/CI/badge.svg)
+![CI](https://github.com/wingtk/gvsbuild/actions/workflows/ci.yml/badge.svg)
 
 This python script helps you build a full [GTK](https://www.gtk.org/) library
 stack for Windows using Visual Studio. Currently, GTK 3 and GTK 4 are supported.
+
+## Install GTK Only
+
+If you want to only run GTK on Windows and not build it yourself, you can download
+a zip file from the [latest release](https://github.com/wingtk/gvsbuild/releases/latest) and unzip it to `C:\gtk`.
+
+It comes with GTK4, Cairo, PyGObject, Pycairo, GtkSourceView5, adwaita-icon-theme, and
+all of their dependencies.
+
+Note however that these binaries are provided “AS IS”, WITHOUT WARRANTY OF ANY KIND.
+They just contain the output of our latest CI run. They are not tested, and we cannot
+commit to timely updates even for security issues. We strongly recommend to build your
+own binaries, especially if you plan to distribute them with your application or use them in
+production.
+
+### Environmental Variables
+Finally, add GTK to your environmental variables with:
+
+```PowerShell
+$env:Path = "C:\gtk\bin;" + $env:Path
+$env:LIB = "C:\gtk\lib;" + $env:LIB
+$env:INCLUDE = "C:\gtk\include;C:\gtk\include\cairo;C:\gtk\include\glib-2.0;C:\gtk\include\gobject-introspection-1.0;C:\gtk\lib\glib-2.0\include;" + $env:INCLUDE
+```
+
+### PyGObject and PyCairo
+
+If you are going to use PyGObject and Pycairo, you also need to use the gvsbuild
+generated wheels with your [Python virtualenv](https://docs.python.org/3/tutorial/venv.html)
+in order to work around this [PyGObject bug](https://gitlab.gnome.org/GNOME/pygobject/-/issues/545):
+
+```PowerShell
+pip install --force-reinstall (Resolve-Path C:\gtk\wheels\PyGObject*.whl)
+pip install --force-reinstall (Resolve-Path C:\gtk\wheels\pycairo*.whl)
+```
+
+## Build GTK
 
 The script supports multiple versions of Visual Studio - at the moment we are
 focusing on VS 2022, but we include projects for other versions, and we gladly
@@ -30,9 +66,9 @@ SHA256 hash of each download. Downloads are done using TLS, using SSL
 certificates provided by the system, but in case of error the download is tried
 again ignoring certificate errors.
 
-## Development Environment
+### Development Environment
 
-### Choco
+#### Choco
 We recommend using [Chocolately](https://chocolatey.org/) as a package manager
 in Windows.
 
@@ -45,7 +81,7 @@ To run local scripts in follow-on steps, also execute
 `Set-ExecutionPolicy RemoteSigned`. This allows for local PowerShell scripts
 to run without signing, but still requires signing for remote scripts.
 
-### Git
+#### Git
 To setup a development environment in Windows install
 [Git](https://gitforwindows.org) by executing as an administrator:
 
@@ -53,7 +89,7 @@ To setup a development environment in Windows install
 choco install git
 ```
 
-### MSYS2
+#### MSYS2
 Both of the development environments in the next steps need MSYS2 installed.
 
 Install [MSYS2](http://www.msys2.org/):
@@ -63,7 +99,7 @@ Keep PowerShell open as administrator and execute:
 choco install msys2
 ```
 
-### Building GTK
+#### Building GTK
 
 First we will install the gvsbuild dependencies:
 1. Visual C++ build tools workload for Visual Studio 2022 Build Tools
@@ -80,24 +116,30 @@ Note: Visual Studio versions 2013 (not for all projects), 2015, 2017, 2019, and 
 
 #### Install the Latest Python
 
-Download and install the latest version of Python:
+In Windows, The official installer contains all the Python components and is the
+best option for developers using Python for any kind of project.
 
-1. Install from Chocolately with `choco install python` with admin PowerShell
-1. Restart your PowerShell terminal as a normal user and check that `python --version` is correct.
+For more information on how to use the official installer, please see the
+[full installer instructions](https://docs.python.org/3/using/windows.html#windows-full).
+The default installation options should be fine for use with gvsbuild.
 
-Note: If you are going to install Python using an alternative means, like the
-official Windows installers, we suggest to install Python in C:\Python3x, for
-example C:\Python310. Other Python distributions like [Miniconda
-3](https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe)
-should also work.
+1. Install the latest Python version using the
+[official installer](https://www.python.org/downloads/windows/).
+
+2. Open a PowerShell terminal as a normal user and check the python version:
+
+   ```PowerShell
+   py -3.12 --version
+   ```
 
 #### Install gvsbuild
+
 The recommended way to install gvsbuild is with pipx. Open a new regular user
 PowerShell terminal and execute:
 
 ```PowerShell
-python -m pip install --user pipx
-python -m pipx ensurepath
+py -3.12 -m pip install --user pipx
+py -3.12 -m pipx ensurepath
 pipx install gvsbuild
 ```
 
@@ -202,6 +244,11 @@ pip install --force-reinstall (Resolve-Path C:\gtk-build\build\x64\release\pygob
 pip install --force-reinstall (Resolve-Path C:\gtk-build\build\x64\release\pycairo\dist\pycairo*.whl)
 ```
 
+#### Use Icons with GTK
+
+If you are going to use SVG icons with a GTK app, you need to also need to build `librsvg`. Normally you want
+to build GTK with `gvsbuild build gtk4 adwaita-icon-theme` which will include librsvg and hicolor-icon-theme.
+
 #### Other Options
 
  For more information about the possible commands run:
@@ -243,6 +290,8 @@ pip install --force-reinstall (Resolve-Path C:\gtk-build\build\x64\release\pycai
 rebuilding it with `--from-scratch`
 - If the download of a tarball fails a partial file will not pass the hash check,
 delete the file and try again.
+- If you get an out of memory error, reduce the number of processor cores building at once
+by adding the `--ninja-opts -j2` option, where 2 is the number of cores.
 
 ## OpenSSL
 
@@ -270,6 +319,17 @@ gvsbuild deps --graph --gv-file test.gv
 
 Without option a simple dependency of all the projects is printed, as usual with
 --help a summary of the options/commands is printed.
+
+## Gvsbuild Users
+
+The following projects are using Gvsbuild for Windows GTK cross-platform support:
+
+- [Deluge](https://github.com/deluge-torrent/deluge) - BitTorrent client
+- [Gaphor](https://github.com/gaphor/gaphor) - A simple SysML/UML modeling tool
+- [PothosSDR](https://github.com/pothosware/PothosSDR) - Software-Defined Radio development environment
+- [SkyTemple Randomizer](https://github.com/SkyTemple/skytemple-randomizer) - Randomizer for Pokémon Mystery Dungeon Explorers of Sky
+
+Are you using Gvsbuild? Please submit a Pull Request to add your app to the list.
 
 ## License
 

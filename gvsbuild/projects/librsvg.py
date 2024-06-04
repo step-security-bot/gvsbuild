@@ -24,17 +24,19 @@ class Librsvg(Tarball, Project):
         Project.__init__(
             self,
             "librsvg",
-            version="2.57.0",
+            version="2.58.1",
             repository="https://gitlab.gnome.org/GNOME/librsvg",
             archive_url="https://download.gnome.org/sources/librsvg/{major}.{minor}/librsvg-{version}.tar.xz",
-            hash="335fe2e0c2cbf1b7bf0668651224a23e135451f0b1793cd813649be2bffa74e8",
+            hash="3728596290a8576d305d06ec8afdf473516feee9dff22e03235eac433d56824e",
             dependencies=[
                 "cargo",
                 "cairo",
                 "pango",
                 "gdk-pixbuf",
                 "libxml2",
+                "freetype",
             ],
+            patches=[],
         )
         if Project.opts.enable_gi:
             self.add_dependency("gobject-introspection")

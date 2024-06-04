@@ -24,9 +24,9 @@ class Harfbuzz(Tarball, Meson):
         Project.__init__(
             self,
             "harfbuzz",
-            version="8.3.0",
+            version="8.5.0",
             archive_url="https://github.com/harfbuzz/harfbuzz/releases/download/{version}/harfbuzz-{version}.tar.xz",
-            hash="109501eaeb8bde3eadb25fab4164e993fbace29c3d775bcaa1c1e58e2f15f847",
+            hash="77e4f7f98f3d86bf8788b53e6832fb96279956e1c3961988ea3d4b7ca41ddc27",
             dependencies=["meson", "cmake", "freetype", "cairo", "pkgconf", "glib"],
         )
 
@@ -35,6 +35,9 @@ class Harfbuzz(Tarball, Meson):
             self.add_param("-Dintrospection=enabled")
         else:
             self.add_param("-Dintrospection=disabled")
+
+        self.add_param("-Ddirectwrite=enabled")
+        self.add_param("-Dgdi=enabled")
 
     def build(self):
         Meson.build(self)

@@ -26,9 +26,9 @@ class Ffmpeg(Tarball, Project):
         Project.__init__(
             self,
             "ffmpeg",
-            version="6.1",
+            version="7.0.1",
             archive_url="https://ffmpeg.org/releases/ffmpeg-{version}.tar.xz",
-            hash="488c76e57dd9b3bee901f71d5c95eaf1db4a5a31fe46a28654e837144207c270",
+            hash="bce9eeb0f17ef8982390b1f37711a61b4290dc8c2a0c1a37b5857e85bfb0e4ff",
             dependencies=["nasm", "msys2", "pkgconf", "nv-codec-headers"],
             patches=[],
         )
@@ -36,6 +36,11 @@ class Ffmpeg(Tarball, Project):
             self.add_dependency("x264")
 
     def build(self):
+        configuration = (
+            "debug-optimized"
+            if self.opts.release_configuration_is_actually_debug_optimized
+            else self.opts.configuration
+        )
         msys_path = Project.get_tool_path("msys2")
         self.exec_vs(
             r"%s\bash build\build.sh %s %s %s %s"
@@ -43,11 +48,16 @@ class Ffmpeg(Tarball, Project):
                 msys_path,
                 convert_to_msys(self.pkg_dir),
                 convert_to_msys(self.builder.gtk_dir),
-                self.builder.opts.configuration,
+                configuration,
                 "enable_gpl" if self.opts.ffmpeg_enable_gpl else "disable_gpl",
             ),
             add_path=msys_path,
         )
+
+        if configuration in ["debug-optimized", "debug"]:
+            self.install(r".\libavcodec\avcodec-60.pdb bin")
+            self.install(r".\libavutil\avutil-58.pdb bin")
+            self.install(r".\libswscale\libswscale-7.pdb bin")
 
         self.install(r".\COPYING.LGPLv2.1 " r".\COPYING.LGPLv3 " r"share\doc\ffmpeg")
         if self.opts.ffmpeg_enable_gpl:
@@ -67,9 +77,9 @@ class NvCodecHeaders(Tarball, Project):
         Project.__init__(
             self,
             "nv-codec-headers",
-            version="12.1.14.0",
+            version="12.2.72.0",
             archive_url="https://github.com/FFmpeg/nv-codec-headers/releases/download/n{version}/nv-codec-headers-{version}.tar.gz",
-            hash="62b30ab37e4e9be0d0c5b37b8fee4b094e38e570984d56e1135a6b6c2c164c9f",
+            hash="c295a2ba8a06434d4bdc5c2208f8a825285210d71d91d572329b2c51fd0d4d03",
         )
 
     def build(self):

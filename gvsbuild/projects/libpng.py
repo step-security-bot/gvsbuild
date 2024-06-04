@@ -24,14 +24,17 @@ class Libpng(Tarball, CmakeProject):
         Project.__init__(
             self,
             "libpng",
-            version="1.6.40",
-            archive_url="http://prdownloads.sourceforge.net/libpng/libpng-{version}.tar.xz",
-            hash="535b479b2467ff231a3ec6d92a525906fb8ef27978be4f66dbe05d3f3a01b3a1",
+            version="1.6.43",
+            repository="https://github.com/pnggroup/libpng",
+            archive_url="https://github.com/pnggroup/libpng/archive/v{version}.tar.gz",
+            archive_filename="libpng-{version}.tar.gz",
+            hash="fecc95b46cf05e8e3fc8a414750e0ba5aad00d89e9fdf175e94ff041caf1a03a",
             dependencies=["cmake", "ninja", "zlib"],
         )
 
     def build(self):
-        CmakeProject.build(self, use_ninja=True)
+        cmake_params = '-DPNG_TOOLS=OFF -DPNG_TESTS=OFF -Dld-version-script=OFF -DPNG_DEBUG_POSTFIX=""'
+        CmakeProject.build(self, cmake_params=cmake_params, use_ninja=True)
 
         self.install_pc_files()
         self.install(r"LICENSE share\doc\libpng")
