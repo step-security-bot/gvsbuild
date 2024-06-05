@@ -9,6 +9,9 @@ concurrency:
 
 name: Build
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Build GTK Binaries
